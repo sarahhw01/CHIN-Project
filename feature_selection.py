@@ -54,7 +54,7 @@ plt.ylabel("Importance")
 plt.show()
 
 # --> LogP is by far the most important feature, after that comes aromatic bonds, the remaining features are similarly unimportant
-# Subset data by including only important features
+# Subset data by including only important features, To-Do: try different combinations of features and check how this affects performance
 compound_id = data['Compound ID']
 logP = data['LogP']
 aromatic_bonds = data['AromaticBonds']
