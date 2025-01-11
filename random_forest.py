@@ -44,7 +44,7 @@ best_model = grid_search.best_estimator_
 print(best_model)
 
 
-'''balanced_data = pd.read_csv('balanced_data.csv', index_col=0)
+balanced_data = pd.read_csv('balanced_data_second_version.csv', index_col=0)
 print(balanced_data)
 
 # split data into X and y, where y is the pLC50 value
@@ -75,14 +75,4 @@ grid_search.fit(X_train, y_train)
 best_model = grid_search.best_estimator_
 print(best_model)
 
-
-from sklearn.model_selection import cross_val_score
-from sklearn.linear_model import LinearRegression
-
-# Assuming 'X' is the feature set and 'y' is the target variable
-model = LinearRegression()
-
-# Perform cross-validation
-cv_scores = cross_val_score(model, X, y, cv=5, scoring='neg_mean_squared_error')
-print("Cross-validation RMSE:", -cv_scores.mean()) '''
 
