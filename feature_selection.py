@@ -56,9 +56,11 @@ plt.show()
 # --> LogP is by far the most important feature, after that comes aromatic bonds, the remaining features are similarly unimportant
 # Subset data by including only important features, To-Do: try different combinations of features and check how this affects performance
 compound_id = data['Compound ID']
+SMILES = data['SMILES']
 logP = data['LogP']
 aromatic_bonds = data['AromaticBonds']
 plc50 = data['pLC50']
-data_important_features = pd.concat([compound_id, logP, aromatic_bonds, plc50], axis=1)
+#data_important_features = pd.concat([compound_id, SMILES, logP, aromatic_bonds, plc50], axis=1)
+data_important_features = data.drop(['MolecularWeight'], axis=1)
 print(data_important_features)
 data_important_features.to_csv('important_features_data.csv')
