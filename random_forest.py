@@ -3,13 +3,10 @@ from sklearn.metrics import mean_squared_error, r2_score
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
-import seaborn as sns
 import matplotlib.pyplot as plt
-import numpy as np
-import math
-from sklearn.utils import resample
+import joblib
 
-data = pd.read_csv('important_features_data.csv', index_col=0)
+'''data = pd.read_csv('important_features_data.csv', index_col=0)
 
 # split data into X and y, where y is the pLC50 value
 X = data.drop(['Compound ID', 'SMILES', 'pLC50'], axis=1)
@@ -41,7 +38,7 @@ param_grid = {'n_estimators': [50, 100, 200], 'max_depth': [None, 10, 20]}
 grid_search = GridSearchCV(RandomForestRegressor(), param_grid, cv=5, scoring='neg_root_mean_squared_error')
 grid_search.fit(X_train, y_train)
 best_model = grid_search.best_estimator_
-print(best_model)
+print(best_model)'''
 
 
 balanced_data = pd.read_csv('balanced_data_second_version.csv', index_col=0)
@@ -69,10 +66,11 @@ rmse = mean_squared_error(y_test, y_pred, squared=False)
 r2 = r2_score(y_test, y_pred)
 print(f"RMSE: {rmse}, R2: {r2}")
 # parameter tuning
-param_grid = {'n_estimators': [50, 100, 200], 'max_depth': [None, 10, 20]}
+'''param_grid = {'n_estimators': [50, 100, 200], 'max_depth': [None, 10, 20]}
 grid_search = GridSearchCV(RandomForestRegressor(), param_grid, cv=5, scoring='neg_root_mean_squared_error')
 grid_search.fit(X_train, y_train)
 best_model = grid_search.best_estimator_
-print(best_model)
+print(best_model)'''
 
-
+# save the trained model into a file
+joblib.dump(model, 'trained_random_forest_model.pkl')
