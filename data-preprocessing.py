@@ -32,16 +32,10 @@ compound_df = pd.DataFrame(data)
 compound_df.to_csv('compound_data.csv')
 print(compound_df)
       
-# Load the data
+# Look at distribution of the data
 data = pd.read_csv('compound_data.csv') 
 plt.hist(data['pLC50'], bins=50, edgecolor='k')
 plt.xlabel('pLC50')
 plt.ylabel('Frequency')
 plt.title('Distribution of pLC50 Values')
 plt.show()
-
-print(data['pLC50'].value_counts().values == 1)
-
-'''# Define bins (you can adjust bin edges based on your data)
-bins = np.linspace(data['pLC50'].min(), data['pLC50'].max(), num=6)  # 5 bins
-data['pLC50_bin'] = pd.cut(data['pLC50'], bins=bins, labels=False)'''
