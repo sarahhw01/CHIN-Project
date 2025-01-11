@@ -32,3 +32,4 @@ balanced_data = pd.concat([bin_0_undersampled, bin_1_oversampled, bin_2_oversamp
 print(balanced_data['pLC50_bin'].value_counts())
 
 balanced_data.to_csv('balanced_data.csv')
+

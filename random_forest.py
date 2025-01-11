@@ -11,7 +11,7 @@ from sklearn.utils import resample
 
 data = pd.read_csv('important_features_data.csv', index_col=0)
 
-'''# split data into X and y, where y is the pLC50 value
+# split data into X and y, where y is the pLC50 value
 X = data.drop(['Compound ID', 'SMILES', 'pLC50'], axis=1)
 y = data['pLC50']
 
@@ -42,9 +42,9 @@ grid_search = GridSearchCV(RandomForestRegressor(), param_grid, cv=5, scoring='n
 grid_search.fit(X_train, y_train)
 best_model = grid_search.best_estimator_
 print(best_model)
-'''
 
-balanced_data = pd.read_csv('balanced_data.csv', index_col=0)
+
+'''balanced_data = pd.read_csv('balanced_data.csv', index_col=0)
 print(balanced_data)
 
 # split data into X and y, where y is the pLC50 value
@@ -84,5 +84,5 @@ model = LinearRegression()
 
 # Perform cross-validation
 cv_scores = cross_val_score(model, X, y, cv=5, scoring='neg_mean_squared_error')
-print("Cross-validation RMSE:", -cv_scores.mean()) 
+print("Cross-validation RMSE:", -cv_scores.mean()) '''
 
