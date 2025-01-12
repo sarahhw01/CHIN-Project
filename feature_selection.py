@@ -57,5 +57,7 @@ plt.show()
 # Subset data by including only important features, To-Do: try different combinations of features and check how this affects performance
 data_important_features = data.drop(['MolecularWeight'], axis=1)
 data_important_features = data.drop(['RingCount'], axis=1)
+data_important_features = data.drop(['N_RadicalElectrons'], axis=1)
+data_important_features = data.drop(['TPSA'], axis=1)
 print(data_important_features)
 data_important_features.to_csv('important_features_data.csv')

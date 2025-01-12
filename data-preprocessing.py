@@ -26,15 +26,17 @@ for mol in compounds:
         ring_count = Descriptors.RingCount(mol)
         max_partial_charge = Descriptors.MaxAbsPartialCharge(mol)
         min_partial_charge = Descriptors.MinAbsPartialCharge(mol)
+        N_radical_electrons = Descriptors.NumRadicalElectrons(mol)
+        N_valence_electrons = Descriptors.NumValenceElectrons(mol)
 
         # append data 
-        data.append({'Compound ID': compound_id, 'SMILES': smiles, 'MolecularWeight': mol_weight, 'LogP': logP, 'TPSA' : tpsa, 'N_RotatableBonds' : N_rotatable_bonds, 'AromaticBonds' : aromatic_rings, 'HeavyAtomCount' : heavy_atom_count, 'RingCount' : ring_count, 'N_H_Donors' : N_H_donors, 'N_H_Acceptors' : N_H_acceptors, 'MaxPartialCharge': max_partial_charge, 'MinPartialCharge': min_partial_charge, 'pLC50': plc50})   
+        data.append({'Compound ID': compound_id, 'SMILES': smiles, 'MolecularWeight': mol_weight, 'LogP': logP, 'TPSA' : tpsa, 'N_RotatableBonds' : N_rotatable_bonds, 'AromaticBonds' : aromatic_rings, 'HeavyAtomCount' : heavy_atom_count, 'RingCount' : ring_count, 'N_H_Donors' : N_H_donors, 'N_H_Acceptors' : N_H_acceptors, 'MaxPartialCharge': max_partial_charge, 'MinPartialCharge': min_partial_charge, 'N_RadicalElectrons': N_radical_electrons, 'N_ValenceElectrons': N_valence_electrons, 'pLC50': plc50})   
 
 # write result into a dataframe and csv file
 compound_df = pd.DataFrame(data)
 compound_df.to_csv('compound_data.csv')
 print(compound_df)
-      
+ 
 # Look at distribution of the data
 data = pd.read_csv('compound_data.csv') 
 plt.hist(data['pLC50'], bins=50, edgecolor='k')
