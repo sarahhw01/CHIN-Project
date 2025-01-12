@@ -57,7 +57,7 @@ print("Shape of Test Target: {}".format(y_val.shape))
 print(y_train.value_counts())
 print(y_val.value_counts())
 
-model = RandomForestRegressor(max_depth=20, n_estimators=200, random_state=42)
+model = RandomForestRegressor(max_depth=20, n_estimators=50, random_state=42)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_val)
 
