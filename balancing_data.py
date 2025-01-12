@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.utils import resample
 
 data = pd.read_csv('important_features_data.csv', index_col=0)
+print(data)
 # balance the data
 # Define bins (you can adjust bin edges based on your data)
 bins = np.linspace(data['pLC50'].min(), data['pLC50'].max(), num=10)  # 10 bins
@@ -37,3 +38,4 @@ balanced_data = pd.concat([bin_1, bin_0_oversampled, bin_2_oversampled])
 print(balanced_data['pLC50_bin'].value_counts())
 
 balanced_data.to_csv('balanced_data.csv')
+print(balanced_data)
