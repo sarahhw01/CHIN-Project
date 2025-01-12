@@ -7,6 +7,7 @@ from sklearn.model_selection import GridSearchCV, KFold
 
 data = pd.read_csv('compound_data.csv', index_col=0)
 print(data)
+
 # split data into X and y, where y is the pLC50 value
 X = data.drop(['Compound ID', 'SMILES', 'pLC50'], axis=1).values
 y = data['pLC50'].values
@@ -33,7 +34,7 @@ lasso_cv.fit(X, y)
 print("Best Params {}".format(lasso_cv.best_params_)) # --> best alpha value is 0.00001
 
 # calling the model with the best parameter
-lasso1 = Lasso(alpha=0.00001)
+lasso1 = Lasso(alpha=0.00001, max_iter=1000)
 lasso1.fit(X_train, y_train)
 
 # Using np.abs() to make coefficients positive.  
@@ -56,8 +57,7 @@ plt.show()
 # --> LogP is by far the most important feature, after that comes aromatic bonds, the remaining features are similarly unimportant
 # Subset data by including only important features, To-Do: try different combinations of features and check how this affects performance
 data_important_features = data.drop(['MolecularWeight'], axis=1)
-data_important_features = data.drop(['RingCount'], axis=1)
 data_important_features = data.drop(['N_RadicalElectrons'], axis=1)
-data_important_features = data.drop(['TPSA'], axis=1)
+data_important_features = data.drop(['RingCount'], axis=1)
 print(data_important_features)
 data_important_features.to_csv('important_features_data.csv')
