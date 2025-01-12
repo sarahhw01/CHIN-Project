@@ -28,7 +28,7 @@ for mol in compounds:
         min_partial_charge = Descriptors.MinAbsPartialCharge(mol)
 
         # append data 
-        data.append({'Compound ID': compound_id, 'SMILES': smiles, 'MolecularWeight': mol_weight, 'LogP': logP, 'TPSA' : tpsa, 'N_RotatableBonds' : N_rotatable_bonds, 'AromaticBonds' : aromatic_rings, 'HeavyAtomCount' : heavy_atom_count, 'RingCount' : ring_count, 'N_H_Donors' : N_H_donors, 'N_H_Acceptors' : N_H_acceptors, 'Max_Partial_Charge': max_partial_charge, 'Min_Partial_Charge': min_partial_charge, 'pLC50': plc50})   
+        data.append({'Compound ID': compound_id, 'SMILES': smiles, 'MolecularWeight': mol_weight, 'LogP': logP, 'TPSA' : tpsa, 'N_RotatableBonds' : N_rotatable_bonds, 'AromaticBonds' : aromatic_rings, 'HeavyAtomCount' : heavy_atom_count, 'RingCount' : ring_count, 'N_H_Donors' : N_H_donors, 'N_H_Acceptors' : N_H_acceptors, 'MaxPartialCharge': max_partial_charge, 'MinPartialCharge': min_partial_charge, 'pLC50': plc50})   
 
 # write result into a dataframe and csv file
 compound_df = pd.DataFrame(data)
