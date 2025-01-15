@@ -23,6 +23,7 @@ data = data[data['pLC50_bin'] != 8]
 data = data.drop(['pLC50_bin'], axis=1)
 print(data)
 
+# After throwing out the outlier, redo the binning to get more accurate binning
 bins = np.linspace(data['pLC50'].min(), data['pLC50'].max(), num=5)  # 10 bins
 data['pLC50_bin'] = pd.cut(data['pLC50'], bins=bins, labels=False)
 print(bins)
