@@ -6,24 +6,18 @@ from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 import joblib
 
-data = pd.read_csv('subset_descriptors.csv', index_col=0)
+data = pd.read_csv('categorical_dataset.csv', index_col=0)
 
 # split data into X and y, where y is the pLC50 value
-X = data.drop(['compound_id', 'smiles', 'pLC50'], axis=1)
-y = data['pLC50']
+X = data.drop(['compound_id', 'smiles', 'pLC50', 'toxicity_category', 'toxicity_numeric'], axis=1)
+y = data['toxicity_numeric']
 
-# Train Test Split
-X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.20, random_state=42)
+# Train Validation Split
+X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.20, stratify=y, random_state=42)
 print("Shape of Train Features: {}".format(X_train.shape))
 print("Shape of Test Features: {}".format(X_val.shape))
 print("Shape of Train Target: {}".format(y_train.shape))
 print("Shape of Test Target: {}".format(y_val.shape))
-# Plot the distribution of pLC50 values
-plt.hist(y_train, bins=50, edgecolor='k')
-plt.xlabel('pLC50')
-plt.ylabel('Frequency')
-plt.title('Distribution of pLC50 Values')
-plt.show()
 
 # Initialize Random Forest Model
 rf_model = RandomForestRegressor(random_state=42)
@@ -57,6 +51,15 @@ mse = mean_squared_error(y_val, y_pred)
 r2 = r2_score(y_val, y_pred)
 print("Random Forest Test MSE:", mse)
 print("Random Forest Test R2 Score:", r2)
+
+## To prevent overfitting, checl k-fold cross validation and the mean RMSE
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestRegressor
+
+model = RandomForestRegressor(max_depth=20, n_estimators=50, random_state=42)
+scores = cross_val_score(model, X, y, cv=5, scoring='neg_root_mean_squared_error')
+print(-scores)
+print("Mean RMSE:", -scores.mean())
 
 '''model = RandomForestRegressor(max_depth=20, n_estimators=50, random_state=42)
 model.fit(X_train, y_train)

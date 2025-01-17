@@ -57,3 +57,4 @@ print(balanced_data['pLC50_bin'].value_counts())
 
 balanced_data.to_csv('balanced_data_version_two.csv')
 print(balanced_data)
+

@@ -2,7 +2,8 @@ from rdkit import Chem
 import pandas as pd
 from rdkit.Chem import Descriptors
 import numpy as np
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+from sklearn.utils import resample 
 
 '''# get the compounds
 compounds = Chem.SDMolSupplier('chin-qspr-dataset.sdf')
@@ -39,7 +40,7 @@ print(compound_df)
  
 # Look at distribution of the data
 data = pd.read_csv('compound_data.csv') 
-plt.hist(data['pLC50'], bins=50, edgecolor='k')
+plt.hist(data['pLC50'], categorys=50, edgecolor='k')
 plt.xlabel('pLC50')
 plt.ylabel('Frequency')
 plt.title('Distribution of pLC50 Values')
@@ -138,8 +139,8 @@ min_pLC50 = subset_descriptors_df['pLC50'].min()
 print('Max pLC50 value: ', max_pLC50)
 print('Min pLC50 value: ', min_pLC50)
 
-# bin into different levels of toxicity
-# Define the bin edges and corresponding labels
+# category into different levels of toxicity
+# Define the category edges and corresponding labels
 bin_edges = [-float('inf'), 3.0, 4.0, 5.0, 6.0, float('inf')]
 bin_labels = [
     "Practically non-toxic",
@@ -164,4 +165,41 @@ plt.ylabel('Frequency')
 plt.title('Distribution of pLC50 Values')
 plt.show()
 
-subset_descriptors_df.to_csv('categorical_dataset.csv')
+# Define mapping of categories to numerical values
+toxicity_mapping = {
+    "Practically non-toxic": 1,
+    "Slightly toxic": 2,
+    "Moderately toxic": 3,
+    "Highly toxic": 4,
+    "Extremely toxic": 5
+}
+
+# Apply mapping
+subset_descriptors_df["toxicity_numeric"] = subset_descriptors_df["toxicity_category"].map(toxicity_mapping)
+print(subset_descriptors_df)
+#subset_descriptors_df.to_csv('categorical_dataset.csv')
+
+# Oversample categories with low sample count
+print(subset_descriptors_df['toxicity_numeric'].value_counts())
+
+category_1 = subset_descriptors_df[subset_descriptors_df['toxicity_numeric'] == 1]
+category_2 = subset_descriptors_df[subset_descriptors_df['toxicity_numeric'] == 2]
+category_3 = subset_descriptors_df[subset_descriptors_df['toxicity_numeric'] == 3]
+category_4 = subset_descriptors_df[subset_descriptors_df['toxicity_numeric'] == 4]
+category_5 = subset_descriptors_df[subset_descriptors_df['toxicity_numeric'] == 5]
+# use the largest class as size we want all classes to have
+#target_category_size = round((category_1.shape[0] + category_2.shape[0] + category_3.shape[0] + category_4.shape[0] + category_5.shape[0])/5)
+#print(target_category_size)
+# oversample smaller categories
+category_1_sampled = resample(category_1, replace=True, n_samples=category_2.shape[0], random_state=42)
+category_2_sampled = resample(category_2, replace=True, n_samples=category_2.shape[0], random_state=42)
+category_3_sampled = resample(category_3, replace=True, n_samples=category_2.shape[0], random_state=42)
+category_4_sampled = resample(category_4, replace=True, n_samples=80, random_state=42)
+category_5_sampled = resample(category_5, replace=True, n_samples=80, random_state=42)
+# balance data
+balanced_data = pd.concat([category_1_sampled, category_2_sampled, category_3_sampled, category_4_sampled, category_5_sampled])
+# check if all categories have the same sample size
+print(balanced_data['toxicity_numeric'].value_counts())
+print(balanced_data['toxicity_category'].value_counts())
+
+balanced_data.to_csv('balanced_data_newest_version.csv')
