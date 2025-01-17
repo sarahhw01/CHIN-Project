@@ -191,11 +191,11 @@ category_5 = subset_descriptors_df[subset_descriptors_df['toxicity_numeric'] == 
 #target_category_size = round((category_1.shape[0] + category_2.shape[0] + category_3.shape[0] + category_4.shape[0] + category_5.shape[0])/5)
 #print(target_category_size)
 # oversample smaller categories
-category_1_sampled = resample(category_1, replace=True, n_samples=category_2.shape[0], random_state=42)
+category_1_sampled = resample(category_1, replace=True, n_samples=100, random_state=42)
 category_2_sampled = resample(category_2, replace=True, n_samples=category_2.shape[0], random_state=42)
 category_3_sampled = resample(category_3, replace=True, n_samples=category_2.shape[0], random_state=42)
-category_4_sampled = resample(category_4, replace=True, n_samples=80, random_state=42)
-category_5_sampled = resample(category_5, replace=True, n_samples=80, random_state=42)
+category_4_sampled = resample(category_4, replace=True, n_samples=40, random_state=42)
+category_5_sampled = resample(category_5, replace=True, n_samples=40, random_state=42)
 # balance data
 balanced_data = pd.concat([category_1_sampled, category_2_sampled, category_3_sampled, category_4_sampled, category_5_sampled])
 # check if all categories have the same sample size

@@ -6,14 +6,14 @@ from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 import joblib
 
-data = pd.read_csv('categorical_dataset.csv', index_col=0)
+data = pd.read_csv('balanced_data_newest_version.csv', index_col=0)
 
 # split data into X and y, where y is the pLC50 value
 X = data.drop(['compound_id', 'smiles', 'pLC50', 'toxicity_category', 'toxicity_numeric'], axis=1)
 y = data['toxicity_numeric']
 
 # Train Validation Split
-X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.20, stratify=y, random_state=42)
+X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.20, random_state=42)
 print("Shape of Train Features: {}".format(X_train.shape))
 print("Shape of Test Features: {}".format(X_val.shape))
 print("Shape of Train Target: {}".format(y_train.shape))
