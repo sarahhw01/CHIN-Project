@@ -1,15 +1,15 @@
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import KFold, train_test_split
 from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 import joblib
 
-'''data = pd.read_csv('important_features_data.csv', index_col=0)
+data = pd.read_csv('subset_descriptors.csv', index_col=0)
 
 # split data into X and y, where y is the pLC50 value
-X = data.drop(['Compound ID', 'SMILES', 'pLC50'], axis=1)
+X = data.drop(['compound_id', 'smiles', 'pLC50'], axis=1)
 y = data['pLC50']
 
 # Train Test Split
@@ -25,7 +25,40 @@ plt.ylabel('Frequency')
 plt.title('Distribution of pLC50 Values')
 plt.show()
 
-model = RandomForestRegressor(max_depth=20, n_estimators=50, random_state=42)
+# Initialize Random Forest Model
+rf_model = RandomForestRegressor(random_state=42)
+
+# Hyperparameter tuning for Random Forest
+rf_params = {
+    "n_estimators": [50, 100, 200],
+    "max_depth": [5, 10, 20, None],
+    "min_samples_split": [2, 5, 10],
+    "min_samples_leaf": [1, 2, 4]
+}
+
+# K-Fold Cross-Validation
+kf = KFold(n_splits=5, shuffle=True, random_state=42)
+
+# GridSearchCV for Random Forest
+rf_cv = GridSearchCV(rf_model, param_grid=rf_params, cv=kf, scoring='r2')
+rf_cv.fit(X_train, y_train)
+
+# Best Random Forest parameters
+best_rf_params = rf_cv.best_params_
+print("Best Random Forest Parameters:", best_rf_params)
+
+# Train Random Forest with best parameters
+rf_best = RandomForestRegressor(**best_rf_params, random_state=42)
+rf_best.fit(X_train, y_train)
+
+# Evaluate the model on test data
+y_pred = rf_best.predict(X_val)
+mse = mean_squared_error(y_val, y_pred)
+r2 = r2_score(y_val, y_pred)
+print("Random Forest Test MSE:", mse)
+print("Random Forest Test R2 Score:", r2)
+
+'''model = RandomForestRegressor(max_depth=20, n_estimators=50, random_state=42)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_val)
 
@@ -38,10 +71,10 @@ param_grid = {'n_estimators': [50, 100, 200], 'max_depth': [None, 10, 20]}
 grid_search = GridSearchCV(RandomForestRegressor(), param_grid, cv=5, scoring='neg_root_mean_squared_error')
 grid_search.fit(X_train, y_train)
 best_model = grid_search.best_estimator_
-print(best_model)'''
+print(best_model)
+'''
 
-
-balanced_data = pd.read_csv('balanced_data_version_two.csv', index_col=0)
+'''balanced_data = pd.read_csv('balanced_data_version_two.csv', index_col=0)
 print(balanced_data)
 
 # split data into X and y, where y is the pLC50 value
@@ -82,4 +115,4 @@ from sklearn.ensemble import RandomForestRegressor
 model = RandomForestRegressor(max_depth=20, n_estimators=50, random_state=42)
 scores = cross_val_score(model, X, y, cv=5, scoring='neg_root_mean_squared_error')
 print(-scores)
-print("Mean RMSE:", -scores.mean())
+print("Mean RMSE:", -scores.mean())'''

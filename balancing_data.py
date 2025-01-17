@@ -11,17 +11,18 @@ bins = np.linspace(data['pLC50'].min(), data['pLC50'].max(), num=10)  # 10 bins
 data['pLC50_bin'] = pd.cut(data['pLC50'], bins=bins, labels=False)
 print(bins)
 print(data['pLC50_bin'].value_counts())
-plt.hist(data['pLC50_bin'], bins=50, edgecolor='k')
-plt.xlabel('pLC50 Bins')
-plt.ylabel('Frequency')
-plt.title('Distribution of pLC50 Values')
-plt.show()
 
 # drop na and outlier, which is bin 8 with only 1 occurence
 data = data.dropna()
 data = data[data['pLC50_bin'] != 8]
 data = data.drop(['pLC50_bin'], axis=1)
 print(data)
+
+plt.hist(data['pLC50'], bins=50, edgecolor='k')
+plt.xlabel('pLC50 values')
+plt.ylabel('Frequency')
+plt.title('Distribution of pLC50 Values')
+plt.show()
 
 # After throwing out the outlier, redo the binning to get more accurate binning
 bins = np.linspace(data['pLC50'].min(), data['pLC50'].max(), num=5)  # 10 bins
