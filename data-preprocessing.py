@@ -78,7 +78,7 @@ descriptors_df = pd.DataFrame(descriptors)
 print(descriptors_df.head())
 descriptors_df.to_csv('all_descriptors.csv')'''
 
-'''descriptors_df = pd.read_csv('all_descriptors.csv', index_col=0)
+descriptors_df = pd.read_csv('all_descriptors.csv', index_col=0)
 print(descriptors_df.head())
 #pLC50 to numerical
 descriptors_df['pLC50'] = pd.to_numeric(descriptors_df['pLC50'], errors='coerce')
@@ -92,9 +92,9 @@ correlations = descriptors_df[numerical_cols].corr()['pLC50'].sort_values(ascend
 
 # Print the top correlated descriptors
 print("Top positively correlated descriptors:")
-print(correlations.head(10))
+print(correlations.head(20))
 # get the top 20 positive correlations and subset the dataset by including them
-top_correlations = correlations.head(10)  # Top 20 positive correlations
+top_correlations = correlations.head(20)  # Top 20 positive correlations
 top_correlation_columns = list(top_correlations.index)
 subset_descriptors_df = descriptors_df[top_correlation_columns]
 subset_descriptors_df.insert(0, 'smiles', descriptors_df['smiles'])
@@ -103,7 +103,7 @@ print(subset_descriptors_df)
 subset_descriptors_df.to_csv('subset_descriptors.csv')
 
 print("\nTop negatively correlated descriptors:")
-print(correlations.tail(10))  # Top 10 negative correlations'''
+print(correlations.tail(10))  # Top 10 negative correlations
 
 # Calculate the LC50 values from the pLC5o values
 '''subset_descriptors_df = pd.read_csv('subset_descriptors.csv', index_col=0)
@@ -188,14 +188,14 @@ category_3 = subset_descriptors_df[subset_descriptors_df['toxicity_numeric'] == 
 category_4 = subset_descriptors_df[subset_descriptors_df['toxicity_numeric'] == 4]
 category_5 = subset_descriptors_df[subset_descriptors_df['toxicity_numeric'] == 5]
 # use the largest class as size we want all classes to have
-#target_category_size = round((category_1.shape[0] + category_2.shape[0] + category_3.shape[0] + category_4.shape[0] + category_5.shape[0])/5)
+target_category_size = category_2.shape[0]
 #print(target_category_size)
 # oversample smaller categories
-category_1_sampled = resample(category_1, replace=True, n_samples=100, random_state=42)
-category_2_sampled = resample(category_2, replace=True, n_samples=category_2.shape[0], random_state=42)
-category_3_sampled = resample(category_3, replace=True, n_samples=category_2.shape[0], random_state=42)
-category_4_sampled = resample(category_4, replace=True, n_samples=40, random_state=42)
-category_5_sampled = resample(category_5, replace=True, n_samples=40, random_state=42)
+category_1_sampled = resample(category_1, replace=True, n_samples=target_category_size, random_state=42)
+category_2_sampled = resample(category_2, replace=True, n_samples=target_category_size, random_state=42)
+category_3_sampled = resample(category_3, replace=True, n_samples=target_category_size, random_state=42)
+category_4_sampled = resample(category_4, replace=True, n_samples=target_category_size, random_state=42)
+category_5_sampled = resample(category_5, replace=True, n_samples=target_category_size, random_state=42)
 # balance data
 balanced_data = pd.concat([category_1_sampled, category_2_sampled, category_3_sampled, category_4_sampled, category_5_sampled])
 # check if all categories have the same sample size

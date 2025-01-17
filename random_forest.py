@@ -1,4 +1,4 @@
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.metrics import mean_squared_error, r2_score
 import pandas as pd
 from sklearn.model_selection import KFold, train_test_split
@@ -20,14 +20,15 @@ print("Shape of Train Target: {}".format(y_train.shape))
 print("Shape of Test Target: {}".format(y_val.shape))
 
 # Initialize Random Forest Model
-rf_model = RandomForestRegressor(random_state=42)
+rf_model = RandomForestClassifier(random_state=42)
 
 # Hyperparameter tuning for Random Forest
 rf_params = {
     "n_estimators": [50, 100, 200],
     "max_depth": [5, 10, 20, None],
     "min_samples_split": [2, 5, 10],
-    "min_samples_leaf": [1, 2, 4]
+    "min_samples_leaf": [1, 2, 4],
+    "class_weight": ['balanced', 'balanced_subsample', None]
 }
 
 # K-Fold Cross-Validation
@@ -42,25 +43,33 @@ best_rf_params = rf_cv.best_params_
 print("Best Random Forest Parameters:", best_rf_params)
 
 # Train Random Forest with best parameters
-rf_best = RandomForestRegressor(**best_rf_params, random_state=42)
+rf_best = RandomForestClassifier(**best_rf_params, random_state=42)
 rf_best.fit(X_train, y_train)
 
-# Evaluate the model on test data
+# Evaluate the model on validation data
 y_pred = rf_best.predict(X_val)
 mse = mean_squared_error(y_val, y_pred)
 r2 = r2_score(y_val, y_pred)
 print("Random Forest Test MSE:", mse)
 print("Random Forest Test R2 Score:", r2)
 
+# to check if our model overfits, we compute the performance on the training data
+# Evaluate the model on train data
+y_pred = rf_best.predict(X_train)
+mse = mean_squared_error(y_train, y_pred)
+r2 = r2_score(y_train, y_pred)
+print("Random Forest Test MSE:", mse)
+print("Random Forest Test R2 Score:", r2)
+
 ## To prevent overfitting, checl k-fold cross validation and the mean RMSE
-from sklearn.model_selection import cross_val_score
+'''from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestRegressor
 
-model = RandomForestRegressor(max_depth=20, n_estimators=50, random_state=42)
+model = RandomForestClassifier(**best_rf_params, random_state=42)
 scores = cross_val_score(model, X, y, cv=5, scoring='neg_root_mean_squared_error')
 print(-scores)
 print("Mean RMSE:", -scores.mean())
-
+'''
 '''model = RandomForestRegressor(max_depth=20, n_estimators=50, random_state=42)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_val)
