@@ -202,4 +202,4 @@ balanced_data = pd.concat([category_1_sampled, category_2_sampled, category_3_sa
 print(balanced_data['toxicity_numeric'].value_counts())
 print(balanced_data['toxicity_category'].value_counts())
 
-balanced_data.to_csv('balanced_data_newest_version.csv')
+balanced_data.to_csv('balanced_data_same_sample_sizes.csv')

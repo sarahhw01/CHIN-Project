@@ -6,7 +6,7 @@ from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 import joblib
 
-data = pd.read_csv('balanced_data_newest_version.csv', index_col=0)
+data = pd.read_csv('balanced_data_same_sample_sizes.csv', index_col=0)
 
 # split data into X and y, where y is the pLC50 value
 X = data.drop(['compound_id', 'smiles', 'pLC50', 'toxicity_category', 'toxicity_numeric'], axis=1)
@@ -25,10 +25,9 @@ rf_model = RandomForestClassifier(random_state=42)
 # Hyperparameter tuning for Random Forest
 rf_params = {
     "n_estimators": [50, 100, 200],
-    "max_depth": [5, 10, 20, None],
+    "max_depth": [5, 10, 20],
     "min_samples_split": [2, 5, 10],
-    "min_samples_leaf": [1, 2, 4],
-    "class_weight": ['balanced', 'balanced_subsample', None]
+    "min_samples_leaf": [1, 2, 4]
 }
 
 # K-Fold Cross-Validation
@@ -62,14 +61,14 @@ print("Random Forest Test MSE:", mse)
 print("Random Forest Test R2 Score:", r2)
 
 ## To prevent overfitting, checl k-fold cross validation and the mean RMSE
-'''from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestRegressor
 
 model = RandomForestClassifier(**best_rf_params, random_state=42)
-scores = cross_val_score(model, X, y, cv=5, scoring='neg_root_mean_squared_error')
+scores = cross_val_score(model, X_train, y_train, cv=5, scoring='neg_root_mean_squared_error')
 print(-scores)
 print("Mean RMSE:", -scores.mean())
-'''
+
 '''model = RandomForestRegressor(max_depth=20, n_estimators=50, random_state=42)
 model.fit(X_train, y_train)
 y_pred = model.predict(X_val)
