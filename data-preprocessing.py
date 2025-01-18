@@ -105,32 +105,6 @@ subset_descriptors_df.to_csv('subset_descriptors.csv')
 print("\nTop negatively correlated descriptors:")
 print(correlations.tail(10))  # Top 10 negative correlations
 
-# Calculate the LC50 values from the pLC5o values
-'''subset_descriptors_df = pd.read_csv('subset_descriptors.csv', index_col=0)
-print(subset_descriptors_df)
-
-LC50_values = []
-for value in subset_descriptors_df['pLC50']:
-    LC50_value = 10 ** -value
-    LC50_values.append(LC50_value)
-print(LC50_values)
-
-# convert to LC50 values with unit ppm (not sure if this is right)
-LC50_mols = []
-counter = 0
-for mol_weight in subset_descriptors_df['MolWt']:
-    LC50_mol = LC50_values[counter] * mol_weight 
-    LC50_mols.append(LC50_mol)
-    counter += 1
-print(LC50_mols)
-
-plt.hist(LC50_values,edgecolor='k')
-plt.xlabel('pLC50')
-plt.ylabel('Frequency')
-plt.title('Distribution of pLC50 Values')
-plt.show()'''
-
-
 subset_descriptors_df = pd.read_csv('subset_descriptors.csv', index_col=0)
 print(subset_descriptors_df.head())
 
