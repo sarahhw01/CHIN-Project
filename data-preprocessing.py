@@ -7,7 +7,7 @@ from sklearn.utils import resample
 
 ## STEP 1: GET DATA AND FEATURES
 # get the compounds
-'''compounds = Chem.SDMolSupplier('chin-qspr-dataset.sdf')
+compounds = Chem.SDMolSupplier('chin-qspr-dataset.sdf')
 
 # Function to compute descriptors for a molecule
 def compute_descriptors(mol):
@@ -35,7 +35,7 @@ for mol in compounds:  # suppl is the SDF supplier loaded previously
 # Convert to DataFrame
 descriptors_df = pd.DataFrame(descriptors)
 print(descriptors_df.head())
-descriptors_df.to_csv('all_descriptors.csv')'''
+descriptors_df.to_csv('all_descriptors.csv')
 
 descriptors_df = pd.read_csv('all_descriptors.csv', index_col=0)
 print(descriptors_df.head())
