@@ -45,17 +45,17 @@ rf_best.fit(X_train, y_train)
 
 # Evaluate the model on validation data
 y_pred = rf_best.predict(X_val)
-mse = mean_squared_error(y_val, y_pred)
+rmse = mean_squared_error(y_val, y_pred, squared=False)
 r2 = r2_score(y_val, y_pred)
-print("Random Forest Test MSE:", mse)
+print("Random Forest Test RMSE:", rmse)
 print("Random Forest Test R2 Score:", r2)
 
 # to check if our model overfits, we compute the performance on the training data
 # Evaluate the model on train data
 y_pred = rf_best.predict(X_train)
-mse = mean_squared_error(y_train, y_pred)
+rmse = mean_squared_error(y_train, y_pred, squared=False)
 r2 = r2_score(y_train, y_pred)
-print("Random Forest Test MSE:", mse)
+print("Random Forest Test RMSE:", rmse)
 print("Random Forest Test R2 Score:", r2)
 
 # test for overfitting

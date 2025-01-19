@@ -7,28 +7,29 @@ from rdkit.Chem import Descriptors
 import warnings
 from rdkit import RDLogger
 
-# Test model function, scroll down to insert the test file name
+# Function to compute descriptors for a molecule
+def compute_descriptors(mol):
+    # Extract descriptors
+    descriptor_names = [desc[0] for desc in Descriptors.descList]
+    descriptor_values = [desc[1](mol) for desc in Descriptors.descList]
+    descriptors = dict(zip(descriptor_names, descriptor_values))
+        
+    # Add additional properties
+    descriptors['smiles'] = Chem.MolToSmiles(mol)  # SMILES representation
+    descriptors['pLC50'] = mol.GetProp('pLC50') if mol.HasProp('pLC50') else None  # pLC50
+    descriptors['compound_id'] = mol.GetProp('_Name') if mol.HasProp('_Name') else "Unknown"  # Compound ID
+        
+    return descriptors
+
+# Test model function
 def test_model(path_to_sdf_file):
 
     # Suppress RDKit warnings
     RDLogger.DisableLog('rdApp.*')
     warnings.filterwarnings("ignore")
+
     # Load the data and prepare the features that we used for training our model
     compounds = Chem.SDMolSupplier(path_to_sdf_file)
-
-    # Function to compute descriptors for a molecule
-    def compute_descriptors(mol):
-        # Extract descriptors
-        descriptor_names = [desc[0] for desc in Descriptors.descList]
-        descriptor_values = [desc[1](mol) for desc in Descriptors.descList]
-        descriptors = dict(zip(descriptor_names, descriptor_values))
-        
-        # Add additional properties
-        descriptors['smiles'] = Chem.MolToSmiles(mol)  # SMILES representation
-        descriptors['pLC50'] = mol.GetProp('pLC50') if mol.HasProp('pLC50') else None  # pLC50
-        descriptors['compound_id'] = mol.GetProp('_Name') if mol.HasProp('_Name') else "Unknown"  # Compound ID
-        
-        return descriptors
 
     # Apply descriptor extraction to each molecule
     descriptors = []
@@ -42,14 +43,14 @@ def test_model(path_to_sdf_file):
     # Convert to DataFrame
     descriptors_df = pd.DataFrame(descriptors)
 
-    # use features that we decided were important
+    # use features that we decided were important during feature importance analysis
     subset_descriptors_df = pd.read_csv('subset_descriptors.csv', index_col=0)
     col_names = list(subset_descriptors_df.columns)
     col_names.remove('toxicity_category')
     col_names.remove('toxicity_numeric')
     data = descriptors_df[col_names]
 
-    #pLC50 to numerical
+    # convert pLC50 to numerical
     data['pLC50'] = pd.to_numeric(data['pLC50'], errors='coerce')
 
     # assign categorical classes to ranges of pLC values
@@ -85,20 +86,20 @@ def test_model(path_to_sdf_file):
     print('')
     print(data)
 
-    # now we can test our trained model
+    # Now we can test our trained model
     # Load the pre-trained model
     model = joblib.load('trained_random_forest_model.pkl')
     # create X and y
     X_test = data.drop(['compound_id', 'smiles', 'pLC50', 'toxicity_category', 'toxicity_numeric'], axis=1)
     y_test = data['toxicity_numeric']
-
+    # predict the y values and compute the 
     y_pred = model.predict(X_test)
-    mse = mean_squared_error(y_test, y_pred)
+    rmse = mean_squared_error(y_test, y_pred, squared=False)
     r2 = r2_score(y_test, y_pred)
     print("")
     print("Performance Results on Test data:")
     print("")
-    print("Random Forest Test MSE:", mse)
+    print("Random Forest Test RMSE:", rmse)
     print("Random Forest Test R2 Score:", r2)
     print("")
 
