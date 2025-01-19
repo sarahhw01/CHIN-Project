@@ -6,7 +6,6 @@ from sklearn.model_selection import GridSearchCV
 import joblib
 
 data = pd.read_csv('balanced_data_same_sample_sizes.csv', index_col=0)
-
 # split data into X and y, where y is the pLC50 value
 X = data.drop(['compound_id', 'smiles', 'pLC50', 'toxicity_category', 'toxicity_numeric'], axis=1)
 y = data['toxicity_numeric']
