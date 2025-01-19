@@ -7,7 +7,7 @@ from sklearn.utils import resample
 
 ## STEP 1: GET DATA AND FEATURES
 # get the compounds
-compounds = Chem.SDMolSupplier('chin-qspr-dataset.sdf')
+'''compounds = Chem.SDMolSupplier('chin-qspr-dataset.sdf')
 
 # Function to compute descriptors for a molecule
 def compute_descriptors(mol):
@@ -35,12 +35,61 @@ for mol in compounds:  # suppl is the SDF supplier loaded previously
 # Convert to DataFrame
 descriptors_df = pd.DataFrame(descriptors)
 print(descriptors_df.head())
-descriptors_df.to_csv('all_descriptors.csv')
+descriptors_df.to_csv('all_descriptors.csv')'''
 
 descriptors_df = pd.read_csv('all_descriptors.csv', index_col=0)
 print(descriptors_df.head())
 
-# STEP 2: SELECT FEATURES 
+# STEP 2: TURN pLC50 INTO CATEGORICAL FEATURE
+# group into different levels of toxicity
+# Define the category edges and corresponding labels
+plt.hist(descriptors_df['pLC50'], bins=50, edgecolor='k')
+plt.xlabel('pLC50')
+plt.ylabel('Frequency')
+plt.title('Distribution of pLC50 Values')
+plt.show()
+
+
+bin_edges = [-float('inf'), 3.0, 4.0, 5.0, 6.0, float('inf')]
+bin_labels = [
+    "Practically non-toxic",
+    "Slightly toxic",
+    "Moderately toxic",
+    "Highly toxic",
+    "Extremely toxic"
+]
+
+# exclude the one outlier we have (pLC50 values usually range from 0 to 10)
+print(sum(descriptors_df['pLC50'] > 10))  # we find one outlier
+descriptors_df = descriptors_df[descriptors_df['pLC50'] < 10]
+print(sum(descriptors_df['pLC50'] > 10)) # should be zero now
+# Assign toxicity categories based on pLC50 ranges
+descriptors_df["toxicity_category"] = pd.cut(descriptors_df["pLC50"], bins=bin_edges, labels=bin_labels, right=False)
+print(descriptors_df.head())
+print(descriptors_df['toxicity_category'].value_counts())
+
+plt.hist(descriptors_df['pLC50'], bins=5, edgecolor='k')
+plt.xlabel('pLC50')
+plt.ylabel('Frequency')
+plt.title('Distribution of pLC50 Values')
+plt.show()
+
+# Define mapping of categories to numerical values
+toxicity_mapping = {
+    "Practically non-toxic": 1,
+    "Slightly toxic": 2,
+    "Moderately toxic": 3,
+    "Highly toxic": 4,
+    "Extremely toxic": 5
+}
+
+# Apply mapping
+descriptors_df["toxicity_numeric"] = descriptors_df["toxicity_category"].map(toxicity_mapping)
+print(descriptors_df)
+descriptors_df.to_csv('categorical_dataset.csv')
+
+
+# STEP 3: SELECT FEATURES 
 #pLC50 to numerical
 descriptors_df['pLC50'] = pd.to_numeric(descriptors_df['pLC50'], errors='coerce')
 
@@ -60,6 +109,8 @@ top_correlation_columns = list(top_correlations.index)
 subset_descriptors_df = descriptors_df[top_correlation_columns]
 subset_descriptors_df.insert(0, 'smiles', descriptors_df['smiles'])
 subset_descriptors_df.insert(0, 'compound_id', descriptors_df['compound_id'])
+subset_descriptors_df.insert(len(subset_descriptors_df.columns), 'toxicity_category', descriptors_df['toxicity_category'])
+subset_descriptors_df.insert(len(subset_descriptors_df.columns), 'toxicity_numeric', descriptors_df['toxicity_numeric'])
 print(subset_descriptors_df)
 subset_descriptors_df.to_csv('subset_descriptors.csv')
 
@@ -74,46 +125,6 @@ min_pLC50 = subset_descriptors_df['pLC50'].min()
 print('Max pLC50 value: ', max_pLC50)
 print('Min pLC50 value: ', min_pLC50)
 
-# STEP 3: TURN pLC50 INTO CATEGORICAL FEATURE
-# group into different levels of toxicity
-# Define the category edges and corresponding labels
-bin_edges = [-float('inf'), 3.0, 4.0, 5.0, 6.0, float('inf')]
-bin_labels = [
-    "Practically non-toxic",
-    "Slightly toxic",
-    "Moderately toxic",
-    "Highly toxic",
-    "Extremely toxic"
-]
-
-# exclude the one outlier we have (pLC50 values usually range from 0 to 10)
-print(sum(subset_descriptors_df['pLC50'] > 10))  # we find one outlier
-subset_descriptors_df = subset_descriptors_df[subset_descriptors_df['pLC50'] < 10]
-print(sum(subset_descriptors_df['pLC50'] > 10)) # should be zero now
-# Assign toxicity categories based on pLC50 ranges
-subset_descriptors_df["toxicity_category"] = pd.cut(subset_descriptors_df["pLC50"], bins=bin_edges, labels=bin_labels, right=False)
-print(subset_descriptors_df.head())
-print(subset_descriptors_df['toxicity_category'].value_counts())
-
-plt.hist(subset_descriptors_df['pLC50'], bins=5, edgecolor='k')
-plt.xlabel('pLC50')
-plt.ylabel('Frequency')
-plt.title('Distribution of pLC50 Values')
-plt.show()
-
-# Define mapping of categories to numerical values
-toxicity_mapping = {
-    "Practically non-toxic": 1,
-    "Slightly toxic": 2,
-    "Moderately toxic": 3,
-    "Highly toxic": 4,
-    "Extremely toxic": 5
-}
-
-# Apply mapping
-subset_descriptors_df["toxicity_numeric"] = subset_descriptors_df["toxicity_category"].map(toxicity_mapping)
-print(subset_descriptors_df)
-#subset_descriptors_df.to_csv('categorical_dataset.csv')
 
 # STEP 4: OVERSAMPLE SMALLER CLASSES SO THAT THE DATASET IS BALANCED
 # Oversample categories with low sample count

@@ -1,9 +1,8 @@
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import mean_squared_error, r2_score
 import pandas as pd
-from sklearn.model_selection import KFold, train_test_split
+from sklearn.model_selection import KFold, cross_val_score, train_test_split
 from sklearn.model_selection import GridSearchCV
-import matplotlib.pyplot as plt
 import joblib
 
 data = pd.read_csv('balanced_data_same_sample_sizes.csv', index_col=0)
@@ -60,5 +59,11 @@ r2 = r2_score(y_train, y_pred)
 print("Random Forest Test MSE:", mse)
 print("Random Forest Test R2 Score:", r2)
 
-feature_importances = pd.Series(rf_best.feature_importances_, index=(X.columns).sort_values(ascending=False))
-print(feature_importances)
+# test for overfitting
+model = RandomForestClassifier(**best_rf_params, random_state=42)
+scores = cross_val_score(model, X_train, y_train, cv=5, scoring='neg_root_mean_squared_error')
+print(-scores)
+print("Mean RMSE:", -scores.mean())
+
+# Save the trained model to a file
+joblib.dump(rf_best, "trained_random_forest_model.pkl")
