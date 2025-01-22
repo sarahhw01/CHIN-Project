@@ -3,6 +3,10 @@ import pandas as pd
 from rdkit.Chem import Descriptors
 import matplotlib.pyplot as plt
 from sklearn.utils import resample 
+from rdkit import RDLogger
+
+# Suppress RDKit warnings
+RDLogger.DisableLog('rdApp.*')
 
 ## STEP 1: GET DATA AND FEATURES
 # get the compounds
@@ -38,6 +42,11 @@ descriptors_df.to_csv('all_descriptors.csv')
 
 descriptors_df = pd.read_csv('all_descriptors.csv', index_col=0)
 print(descriptors_df.head())
+
+max_pLC50 = descriptors_df['pLC50'].max()
+min_pLC50 = descriptors_df['pLC50'].min()
+print('Max pLC50 value: ', max_pLC50)
+print('Min pLC50 value: ', min_pLC50)
 
 # STEP 2: TURN pLC50 INTO CATEGORICAL FEATURE
 # group into different levels of toxicity
