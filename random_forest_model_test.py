@@ -127,8 +127,8 @@ def test_model(path_to_sdf_file):
     cm = confusion_matrix(y_test, y_pred)
     plt.figure(figsize=(6,5))
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=set(y_test), yticklabels=set(y_test))
-    plt.xlabel("Predicted Label")
-    plt.ylabel("Actual Label")
+    plt.xlabel("Predicted pLC50 Label")
+    plt.ylabel("Actual pLC50 Label")
     plt.title("Confusion Matrix Heatmap")
     plt.show()
 

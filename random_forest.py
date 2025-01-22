@@ -53,14 +53,6 @@ r2 = r2_score(y_val, y_pred)
 print("Random Forest Test RMSE:", rmse)
 print("Random Forest Test R2 Score:", r2)
 
-# to check if our model overfits, we compute the performance on the training data
-# Evaluate the model on train data
-y_pred = rf_best.predict(X_train)
-rmse = mean_squared_error(y_train, y_pred, squared=False)
-r2 = r2_score(y_train, y_pred)
-print("Random Forest Test RMSE:", rmse)
-print("Random Forest Test R2 Score:", r2)
-
 # test for overfitting
 model = RandomForestClassifier(**best_rf_params, random_state=42)
 scores = cross_val_score(model, X_train, y_train, cv=5, scoring='neg_root_mean_squared_error')
@@ -72,8 +64,8 @@ print("Mean RMSE:", -scores.mean())
 cm = confusion_matrix(y_val, y_pred)
 plt.figure(figsize=(6,5))
 sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=set(y_val), yticklabels=set(y_val))
-plt.xlabel("Predicted Label")
-plt.ylabel("Actual Label")
+plt.xlabel("Predicted pLC50 Label")
+plt.ylabel("Actual pLC50 Label")
 plt.title("Confusion Matrix Heatmap")
 plt.show()
 
