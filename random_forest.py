@@ -4,6 +4,9 @@ import pandas as pd
 from sklearn.model_selection import KFold, cross_val_score, train_test_split
 from sklearn.model_selection import GridSearchCV
 import joblib
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
 
 data = pd.read_csv('balanced_data_same_sample_sizes.csv', index_col=0)
 # split data into X and y, where y is the pLC50 value
@@ -63,6 +66,18 @@ model = RandomForestClassifier(**best_rf_params, random_state=42)
 scores = cross_val_score(model, X_train, y_train, cv=5, scoring='neg_root_mean_squared_error')
 print(-scores)
 print("Mean RMSE:", -scores.mean())
+
+# Plot heatmap
+# Compute Confusion Matrix
+cm = confusion_matrix(y_val, y_pred)
+plt.figure(figsize=(6,5))
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=set(y_val), yticklabels=set(y_val))
+plt.xlabel("Predicted Label")
+plt.ylabel("Actual Label")
+plt.title("Confusion Matrix Heatmap")
+plt.show()
+
+print(y_val.value_counts())
 
 # Save the trained model to a file
 joblib.dump(rf_best, "trained_random_forest_model.pkl")

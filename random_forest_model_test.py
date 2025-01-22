@@ -6,6 +6,9 @@ from rdkit import Chem
 from rdkit.Chem import Descriptors
 import warnings
 from rdkit import RDLogger
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
 
 # Function to compute descriptors for a molecule
 def compute_descriptors(mol):
@@ -118,6 +121,18 @@ def test_model(path_to_sdf_file):
     prediction_results = prediction_results.drop(['Prediction'], axis=1)
     print(prediction_results)
     prediction_results.to_csv("prediction_results.csv")
+
+    # Plot heatmap
+    # Compute Confusion Matrix
+    cm = confusion_matrix(y_test, y_pred)
+    plt.figure(figsize=(6,5))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=set(y_test), yticklabels=set(y_test))
+    plt.xlabel("Predicted Label")
+    plt.ylabel("Actual Label")
+    plt.title("Confusion Matrix Heatmap")
+    plt.show()
+
+    print(y_test.value_counts())
 
 
 if __name__== "__main__":
