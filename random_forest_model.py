@@ -1,4 +1,5 @@
 import argparse
+import sys
 import joblib
 import pandas as pd
 from sklearn.metrics import mean_squared_error, r2_score
@@ -140,6 +141,13 @@ if __name__== "__main__":
     parser.add_argument("-i", help="SDF MOL input file")
     args = parser.parse_args()
     sdf_file = args.i
+
+    if not args.i:
+        parser.print_help()
+        sys.exit("\nError: Missing required argument '-i'. Correct call: python3 random_forest_model_test.py -i test_file_name.sdf\n")
+
     test_model(sdf_file)
+    
     ## In order to run this use the following call:
     # python3 random_forest_model_test.py -i test_file_name.sdf
+    # Check if argument is provided

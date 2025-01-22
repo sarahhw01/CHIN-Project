@@ -76,7 +76,7 @@ descriptors_df["toxicity_category"] = pd.cut(descriptors_df["pLC50"], bins=bin_e
 print(descriptors_df.head())
 print(descriptors_df['toxicity_category'].value_counts())
 
-plt.hist(descriptors_df['pLC50'], bins=5, edgecolor='k')
+plt.hist(descriptors_df['pLC50'], edgecolor='k')
 plt.xlabel('pLC50')
 plt.ylabel('Frequency')
 plt.title('Distribution of pLC50 Values')
