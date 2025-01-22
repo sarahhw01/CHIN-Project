@@ -1,7 +1,6 @@
 from rdkit import Chem
 import pandas as pd
 from rdkit.Chem import Descriptors
-import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.utils import resample 
 
