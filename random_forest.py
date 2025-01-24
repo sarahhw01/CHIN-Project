@@ -73,3 +73,10 @@ print(y_val.value_counts())
 
 # Save the trained model to a file
 joblib.dump(rf_best, "trained_random_forest_model.pkl")
+
+# Evaluate the model on training data
+y_pred = rf_best.predict(X_train)
+rmse = mean_squared_error(y_train, y_pred, squared=False)
+r2 = r2_score(y_train, y_pred)
+print("Random Forest Test RMSE:", rmse)
+print("Random Forest Test R2 Score:", r2)

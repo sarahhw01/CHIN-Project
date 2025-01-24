@@ -111,8 +111,8 @@ correlations = descriptors_df[numerical_cols].corr()['pLC50'].sort_values(ascend
 # Print the top correlated descriptors
 print("Top positively correlated descriptors:")
 print(correlations.head(11))
-# get the top 20 positive correlations and subset the dataset by including them
-top_correlations = correlations.head(11)  # Top 20 positive correlations
+# get the top 11 positive correlations and subset the dataset by including them
+top_correlations = correlations.head(11)  # Top 11 positive correlations
 top_correlation_columns = list(top_correlations.index)
 subset_descriptors_df = descriptors_df[top_correlation_columns]
 subset_descriptors_df.insert(0, 'smiles', descriptors_df['smiles'])
