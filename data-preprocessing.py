@@ -4,6 +4,7 @@ from rdkit.Chem import Descriptors
 import matplotlib.pyplot as plt
 from sklearn.utils import resample 
 from rdkit import RDLogger
+import seaborn as sns
 
 # Suppress RDKit warnings
 RDLogger.DisableLog('rdApp.*')
@@ -121,6 +122,20 @@ subset_descriptors_df.insert(len(subset_descriptors_df.columns), 'toxicity_categ
 subset_descriptors_df.insert(len(subset_descriptors_df.columns), 'toxicity_numeric', descriptors_df['toxicity_numeric'])
 print(subset_descriptors_df)
 subset_descriptors_df.to_csv('subset_descriptors.csv')
+
+# Plot the top 10 correlated features
+# Plotting
+plt.figure(figsize=(10, 6))
+sns.barplot(x=top_correlations.values, y=top_correlations.index, palette="viridis")
+
+# Labels and title
+plt.xlabel("Correlation with pLC50 toxicity level")
+plt.ylabel("Features")
+plt.title("Top 10 Most Important Features Based on Correlation")
+plt.grid(axis="x", linestyle="--", alpha=0.7)
+
+# Show the plot
+plt.show()
 
 print("\nTop negatively correlated descriptors:")
 print(correlations.tail(10))  # Top 10 negative correlations
