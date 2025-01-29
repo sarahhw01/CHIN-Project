@@ -48,7 +48,8 @@ rf_best.fit(X_train, y_train)
 
 # Evaluate the model on validation data
 y_pred = rf_best.predict(X_val)
-rmse = mean_squared_error(y_val, y_pred, squared=False)
+mse = mean_squared_error(y_val, y_pred)
+rmse = mse ** 0.5 
 r2 = r2_score(y_val, y_pred)
 print("Random Forest Test RMSE:", rmse)
 print("Random Forest Test R2 Score:", r2)
@@ -76,7 +77,8 @@ joblib.dump(rf_best, "trained_random_forest_model.pkl")
 
 # Evaluate the model on training data
 y_pred = rf_best.predict(X_train)
-rmse = mean_squared_error(y_train, y_pred, squared=False)
+mse = mean_squared_error(y_train, y_pred)
+rmse = mse ** 0.5 
 r2 = r2_score(y_train, y_pred)
 print("Random Forest Test RMSE:", rmse)
 print("Random Forest Test R2 Score:", r2)
